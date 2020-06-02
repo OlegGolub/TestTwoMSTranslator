@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/translate/")
+@RequestMapping("/translate")
 @Api(value = "wordTranslatorController")
 public class WordTranslatorController {
 
@@ -29,15 +31,15 @@ public class WordTranslatorController {
     @ApiOperation(value = "Get translation the word ", nickname = "WordTranslatorController.translateWord",
         notes = "translate by word")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    @RequestMapping(value = "/{word}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> translateWord(String word){
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> translateWord(@RequestParam String word){
         if(!wordValidator.validate(word)) {
-            return new ResponseEntity(HttpStatus.PRECONDITION_FAILED);
+            return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
         }
         else {
             String translateWord = wordTranslatorService.translateTheWord(word);
             if(StringUtils.isEmpty(translateWord)){
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }else {
                 return ResponseEntity.ok(translateWord);
             }
