@@ -33,16 +33,15 @@ public class WordTranslatorController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> translateWord(@RequestParam String word){
-        if(!wordValidator.validate(word)) {
+        if (!wordValidator.validate(word)) {
             return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
         }
-        else {
-            String translateWord = wordTranslatorService.translateTheWord(word);
-            if(StringUtils.isEmpty(translateWord)){
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }else {
-                return ResponseEntity.ok(translateWord);
-            }
+
+        String translateWord = wordTranslatorService.translateTheWord(word);
+        if(StringUtils.isEmpty(translateWord)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        return ResponseEntity.ok(translateWord);
     }
 }
